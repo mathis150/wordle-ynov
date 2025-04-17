@@ -1,3 +1,26 @@
+<?php
+
+    require_once 'src/Wordle.php';
+    require_once 'env.php';
+
+    $env = new Environment();
+    $ivLength = openssl_cipher_iv_length('AES-256-CBC');
+    $iv = openssl_random_pseudo_bytes($ivLength);
+    
+    $keyHash = hash('sha256', $env->ENV['KEY'], true);
+
+    if(!isset($_COOKIE['guess']) || empty($_COOKIE['guess'])) {
+    } else {
+        $raw = base64_decode($ciphertextBase64);
+        $iv = substr($raw, 0, $ivLength);
+        $ciphertext = substr($raw, $ivLength);
+
+        // Déchiffrement du texte
+        $plaintext = openssl_decrypt($ciphertext, 'AES-256-CBC', $keyHash, OPENSSL_RAW_DATA, $iv);
+        $wordle = new Wordle($plaintext);
+    }
+
+?>
 <html>
     <head>
         <title>Wordle</title>

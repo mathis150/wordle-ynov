@@ -14,7 +14,7 @@ class Wordle {
     private int $currentStreak = 0;
     private array $attemptsPerGame = [];
 
-    public function __construct(?string $guess = null) {
+    public function __construct(?string $guess = null, ?int $attempts = null) {
         $this->dictionary = [
             "apple", "brave", "chair", "dream", "eagle", "flame", "grape", "house", "index",
             "joker", "knife", "lemon", "mango", "night", "ocean", "piano", "queen", "river",
@@ -22,7 +22,7 @@ class Wordle {
         ];
 
         $this->wordToGuess = $guess ?? $this->generateGuess();
-        $this->attempts = 0;
+        $this->attempts = $attempts ?? 0;
         $this->maxAttempts = 6;
         $this->letters = [];
     }
