@@ -35,3 +35,38 @@ $ composer dump-autoload
 - Gestion des tentatives (6 max)
 - Dictionnaire intégré
 - Couverture de test > 80 %
+
+## Structure des tests
+
+Les tests unitaires sont organisés dans le dossier `tests/`.
+
+### Tests déterminant si un mot est valide ou non:
+```
+├── guessTheWord()
+│ ├── Rejet des mots en dessous de 5 lettres
+│ ├── Rejet des mots avec des éléments décimals
+│ └── Accepte les mots de 5 charactères
+```
+
+### Tests d'évaluation du mot à deviner:
+```
+├── guessTheWord()
+│ ├── Retourne "correct" quand le mot est similaire
+│ ├── Retourne "partially correct" quand le mot a des éléments correctes, mais que des éléments sont incorrecte ou pas au bon endroit.
+│ ├── Retourne "incorrect" quand aucune lettre n'est valide
+│ └── Gère les lettres en double mais dont seul est correcte (par exemple)
+```
+
+### Tests des statistique du joueur:
+```
+├── guessTheWord()
+│ ├── Mets à jour le nombre de tentative après chaque essaies
+│ ├── Arrête le jeu après avoir atteint le nombre maximum de tentatives
+│ └── Retourne le nombre de tentatives restantes
+```
+
+### Tests d'utilitaires:
+```
+├── generateGuess()
+│ └── Génère des mot de cinq lettres correctement
+```
