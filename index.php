@@ -9,15 +9,35 @@
     
     $keyHash = hash('sha256', $env->ENV['KEY'], true);
 
+    if(!isset($_COOKIE['gamesPlayed'])) {
+        setcookie('gamesPlayed', 0);
+    }
+    if(!isset($_COOKIE['gamesWon'])) {
+        setcookie('gamesWon', 0);
+    }
+    if(!isset($_COOKIE['currentStreak'])) {
+        setcookie('currentStreak', 0);
+    }
+    if(!isset($_COOKIE['attemptsPerGame'])) {
+        setcookie('attemptsPerGame', 0);
+    }
+
     if(!isset($_COOKIE['guess']) || empty($_COOKIE['guess'])) {
+        $wordle = new Wordle();
+        $ciphertext = openssl_encrypt($wordle->getWordToGuess(), 'AES-256-CBC', $keyHash, OPENSSL_RAW_DATA, $iv);
+        $ciphertextBase64 = base64_encode($iv . $ciphertext);
+
+        var_dump($ciphertextBase64, $wordle->getWordToGuess());
+
+        setcookie('guess', $ciphertextBase64, time() + (86400 * 30), "/"); // 86400 = 1 day
     } else {
-        $raw = base64_decode($ciphertextBase64);
+        $raw = base64_decode($_COOKIE['guess']);
         $iv = substr($raw, 0, $ivLength);
         $ciphertext = substr($raw, $ivLength);
-
-        // Déchiffrement du texte
         $plaintext = openssl_decrypt($ciphertext, 'AES-256-CBC', $keyHash, OPENSSL_RAW_DATA, $iv);
-        $wordle = new Wordle($plaintext);
+
+        $wordle = new Wordle($plaintext, $_GET['attempts'] ?? 0);
+        var_dump($_COOKIE['guess'], $wordle->getWordToGuess());
     }
 
 ?>
