@@ -26,10 +26,10 @@ class Wordle {
         $this->maxAttempts = 6;
         $this->letters = [];
 
-        $this->gamesPlayed = $_COOKIE['gamesPlayed'] ?? 0;
-        $this->gamesWon = $_COOKIE['gamesWon'] ?? 0;
-        $this->currentStreak = $_COOKIE['currentStreak'] ?? 0;
-        $this->attemptsPerGame = $_COOKIE['attemptsPerGame'] ?? [];
+        $this->gamesPlayed = (int) $_COOKIE['gamesPlayed'] ?? 0;
+        $this->gamesWon = (int) $_COOKIE['gamesWon'] ?? 0;
+        $this->currentStreak = (int) $_COOKIE['currentStreak'] ?? 0;
+        $this->attemptsPerGame = (array) $_COOKIE['attemptsPerGame'] ?? [];
     }
 
     public function guessTheWord(string $word): array {
