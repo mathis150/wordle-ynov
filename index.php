@@ -72,6 +72,8 @@
         $attempsPerGames[] = 6;
 
         setcookie('attemptsPerGame', json_encode($attempsPerGames));
+
+        header('Location: index.php');
     }
 
     if(isset($_POST['victory'])) {
@@ -87,6 +89,8 @@
         $attempsPerGames[] = $_GET['attempts'];
 
         setcookie('attemptsPerGame', json_encode($attempsPerGames));
+
+        header('Location: index.php');
     }
 ?>
 <html>
@@ -107,6 +111,8 @@
                 <p>- Games played : <?php echo $_COOKIE['gamesPlayed']?></p>
                 <p>- Games won : <?php echo $_COOKIE['gamesWon']?></p>
                 <p>- Win streak : <?php echo $_COOKIE['currentStreak']?></p>
+                <p>- Attemps :</p>
+                <div id="statistics"></div>
                 <hr>
                 <form method="POST" action="index.php?attempts=<?php echo ((int)$_GET['attempts']) + 1; ?>">
                     <input type="text" name="guess" id="guess" maxlength="5" required>
@@ -146,4 +152,38 @@
         }
         ?>
     </body>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current',{packages:['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            const data = new google.visualization.DataTable();
+            data.addColumn('number', 'Game ID');
+            data.addColumn('number', 'Attemps');
+
+            
+                        
+            data.addRows([<?php
+            $attempsPerGames = json_decode($_COOKIE['attemptsPerGame'], true);
+            if (!is_array($attempsPerGames)) {
+                $attempsPerGames = [];
+            }
+
+            foreach($attempsPerGames as $key => $value) {
+                echo "[".$key.", ".$value."],";
+            }
+            ?>]);
+
+            const options = {
+                title: 'lux',
+                hAxis: {title: 'Date'},
+                vAxis: {title: 'Value'},
+                legend: 'none'
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('statistics'));
+            chart.draw(data, options);
+        }
+    </script>
 </html>
