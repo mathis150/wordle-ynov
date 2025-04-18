@@ -9,10 +9,10 @@ class Wordle {
     private array $dictionary;
 
     // Statistiques
-    private int $gamesPlayed = 0;
-    private int $gamesWon = 0;
-    private int $currentStreak = 0;
-    private array $attemptsPerGame = [];
+    private int $gamesPlayed;
+    private int $gamesWon;
+    private int $currentStreak;
+    private array $attemptsPerGame;
 
     public function __construct(?string $guess = null, ?int $attempts = null) {
         $this->dictionary = [
@@ -25,6 +25,11 @@ class Wordle {
         $this->attempts = $attempts ?? 0;
         $this->maxAttempts = 6;
         $this->letters = [];
+
+        $this->gamesPlayed = $_COOKIE['gamesPlayed'] ?? 0;
+        $this->gamesWon = $_COOKIE['gamesWon'] ?? 0;
+        $this->currentStreak = $_COOKIE['currentStreak'] ?? 0;
+        $this->attemptsPerGame = $_COOKIE['attemptsPerGame'] ?? [];
     }
 
     public function guessTheWord(string $word): array {
@@ -120,5 +125,9 @@ class Wordle {
             'currentStreak' => $this->currentStreak,
             'averageAttempts' => round($averageAttempts, 2)
         ];
+    }
+
+    public function getWordToGuess(): string {
+        return $this->wordToGuess;
     }
 }
